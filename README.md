@@ -7,7 +7,9 @@ The csv is used as a stand in for a token price API call.  In the script I origi
 for this purpose (and left the function in there), however I was not able to rely on it due to rate limiting for 
 free users.  If you have an API key, this may be a better route for you.  This csv is also incomplete at the time of
 this writing, but I intend to fill it in with missing 2021 dates as time permits.  If you use this before then, you may
-have to do that yourself, sorry.  Lastly, the date format on the csv is DD-MM-YYYY.  If you complete this file on your own
+have to do that yourself, sorry. Token prices are taken directly from the Coin Gecko website, and are as of 18:00 each day,
+so the 'true' profit and loss on these calculations may be off a bit.  Sorry again!  
+Lastly, the date format on the csv is DD-MM-YYYY.  If you complete this file on your own
 make sure you do not mix up the days/months or you will have a bad time.
 
 The script itself requires you to fill in your ronin address and a filepath where you will store the aforementioned csv.
