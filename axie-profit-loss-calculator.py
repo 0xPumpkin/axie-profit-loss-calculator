@@ -158,7 +158,7 @@ for i in range(0, iter_count):
 
 	result_set = pd.json_normalize(json_data, record_path = ['results'])
 	df = df.append(result_set, ignore_index=True)
-	print(str(i + 1) + ' out of ' + str(iter_count - 1) + ' result sets retrieved.')
+	print(str(i + 1) + ' out of ' + str(iter_count) + ' result sets retrieved.')
 
 ## DATE PROCESSING ##
 df['timestamp_date'] = df['timestamp'].map(fix_timestamp)
