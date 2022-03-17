@@ -43,7 +43,9 @@ axie_smart_contracts = {
 	'0xa7964991f339668107e2b6a6f6b8e8b74aa9d017' : 'USDC-WETH LP Contract',
 	'0x2ecb08f87f075b5769fe543d0e52e40140575ea7' : 'RON-WETH LP Contract',
 	'0xe35d62ebe18413d96ca2a2f7cf215bb21a406b4b' : 'Ronin Gateway Contract',
-	'0x0000000000000000000000000000000000000011' : 'Ronin Validator Contract'
+	'0x0000000000000000000000000000000000000011' : 'Ronin Validator Contract',
+	'0x05b0bb3c1c320b280501b86706c3551995bc8571' : 'AXS Staking Pool Contract',
+	'0x8bd81a19420bad681b7bfc20e703ebd8e253782d' : 'AXS Staking Claim'
 }
 
 # ADD YOUR RONIN ADDRESS IN HERE #
@@ -156,7 +158,7 @@ for i in range(0, iter_count):
 
 	result_set = pd.json_normalize(json_data, record_path = ['results'])
 	df = df.append(result_set, ignore_index=True)
-	print(str(i) + ' out of ' + str(iter_count) + ' result sets retrieved.')
+	print(str(i + 1) + ' out of ' + str(iter_count - 1) + ' result sets retrieved.')
 
 ## DATE PROCESSING ##
 df['timestamp_date'] = df['timestamp'].map(fix_timestamp)
@@ -179,6 +181,16 @@ df['tx_value'] = pd.to_numeric(df['modified_token_quantity']) * df['price']
 ## EXPORT ALL TRANSACTIONS ##
 df.to_csv(filepath + 'all transactions.csv', index=False)
 
+## FILTER OUT ALL 0 VALUE TRANSACTIONS ##
+df = df[df['modified_token_quantity'] !=0]
+
+## FILTER OUT ALL LP TRANSACTIONS ##
+lp_filter_string = r".*LP Contract"
+lp_transactions = df[(df['to_name'].str.contains(lp_filter_string, regex=True, na=False)) | (df['from_name'].str.contains(lp_filter_string, regex=True, na=False))]
+lp_transactions.to_csv(filepath + 'all LP transactions.csv', index=False)
+
+df = df.drop(df[(df['to_name'].str.contains(lp_filter_string, regex=True, na=False)) | (df['from_name'].str.contains(lp_filter_string, regex=True, na=False))].index)
+
 ## SLP CALCULATIONS ##
 slp_df = df[df['token_symbol'] == 'SLP']
 
@@ -198,6 +210,8 @@ slp_receipt_df.to_csv(filepath + 'slp_receipts_with_income_calculated.csv', inde
 ## AXS CALCULATIONS ##
 
 axs_df = df[df['token_symbol'] == 'AXS']
+
+axs_df = axs_df.drop(axs_df[(axs_df['to_name'] == 'AXS Staking Pool Contract') | (axs_df['from_name'] == 'AXS Staking Pool Contract') | (axs_df['from_name'] == 'Ronin Gateway Contract')].index)
 
 axs_receipt_df = axs_df[axs_df['action'] == 'receipt']
 axs_disposal_df = axs_df[axs_df['action'] == 'disposal']
@@ -258,9 +272,11 @@ df_all_intake_with_sales['tax_implications'] = df_all_intake_with_sales['axie_sa
 df_all_intake_with_sales.to_csv(filepath + 'axie sales.csv', index=False)
 
 # MISCELLANEOUS #
+
 ## DEPOSITS ##
 df_all_deposits_to_axie = df[df['from_name']=='Ronin Gateway Contract']
 df_all_deposits_to_axie.to_csv(filepath + 'all_deposits_to_axie.csv', index=False)
 
+## WITHDRAWALS ##
 df_all_withdrawals_from_axie = df[df['to_name']=='Ronin Gateway Contract']
 df_all_withdrawals_from_axie.to_csv(filepath + 'all_withdrawals_from_axie.csv', index=False)
