@@ -14,7 +14,7 @@ make sure you do not mix up the days/months or you will have a bad time.
 
 The script itself requires you to fill in your ronin address and a filepath where you will store the aforementioned csv.
 This is also where the outputs from the script will go.  The script currently has no way of dealing with Ronin LP transactions,
-so you're on your own there.  I left them in for posterity, but I'm not sure if they're being handled properly.  Sorry!
+so you're on your own there.  I left them in for posterity, but I'm not sure if they're being handled properly.  Sorry yet again!
 
 If you have any suggestions on improving this script or for adding missing features, please submit a PR.  I am new to Python and
 software development in general, and would be grateful for the opportunity to learn more from the masters lurking Github.
