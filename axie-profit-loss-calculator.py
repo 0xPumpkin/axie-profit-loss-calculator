@@ -193,6 +193,7 @@ df = df.drop(df[(df['to_name'].str.contains(lp_filter_string, regex=True, na=Fal
 
 ## SLP CALCULATIONS ##
 slp_df = df[df['token_symbol'] == 'SLP']
+slp_df.sort_values(by='timestamp', ascending=True, inplace=True)
 
 slp_receipt_df = slp_df[slp_df['action'] == 'receipt']
 slp_disposal_df = slp_df[slp_df['action'] == 'disposal']
@@ -208,10 +209,11 @@ slp_disposal_df.to_csv(filepath + 'slp_disposals_with_capital_gains_calculated.c
 slp_receipt_df.to_csv(filepath + 'slp_receipts_with_income_calculated.csv', index=False)
 
 ## AXS CALCULATIONS ##
-
 axs_df = df[df['token_symbol'] == 'AXS']
 
 axs_df = axs_df.drop(axs_df[(axs_df['to_name'] == 'AXS Staking Pool Contract') | (axs_df['from_name'] == 'AXS Staking Pool Contract') | (axs_df['from_name'] == 'Ronin Gateway Contract')].index)
+
+axs_df.sort_values(by='timestamp', ascending=True, inplace=True)
 
 axs_receipt_df = axs_df[axs_df['action'] == 'receipt']
 axs_disposal_df = axs_df[axs_df['action'] == 'disposal']
